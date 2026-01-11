@@ -103,14 +103,14 @@ StaffSync/
 Create a `.env` file in the `server` directory:
 ```bash
 PORT=5001
-MONGO_URI=mongodb+srv://<username>:<DB_PASSWORD>@cluster.mongodb.net/staffsync?retryWrites=true&w=majority
+MONGO_URI=mongodb+srv://<username>:<DB_PASSWORD>@cluster.mongodb.net/?appName=Cluster0
 DATABASE_PASSWORD=your_mongodb_password
 CLIENT_URL=http://localhost:5173
 ```
 **For Production (Render):**
 ```bash
 PORT=5001
-MONGO_URI=mongodb+srv://<username>:<DB_PASSWORD>@cluster.mongodb.net/staffsync?retryWrites=true&w=majority
+MONGO_URI=mongodb+srv://<username>:<DB_PASSWORD>@cluster.mongodb.net/?appName=Cluster0
 DATABASE_PASSWORD=your_mongodb_password
 CLIENT_URL=https://staff-sync-amber.vercel.app
 ```
