@@ -123,8 +123,9 @@ VITE_API_URL=http://localhost:5001/api/v1
 ```
 **For Production (Vercel):**
 ```bash
-VITE_API_URL=https://staffsync-server.onrender.com/api/v1 ## 🏃 Running the Application
+VITE_API_URL=https://staffsync-server.onrender.com/api/v1 
 ```
+## 🏃 Running the Application
 
 ### Development Mode
 
