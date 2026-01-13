@@ -1,11 +1,11 @@
-const User = require("../models/userModel");
+const Employee = require("../models/employeeModel");
 
 //get status
 exports.getStatus = async (req, res) => {
   try {
-    const userCount = await User.countDocuments();
-    const active = await User.countDocuments({ status: "Active" });
-    const inactive = await User.countDocuments({ status: "Inactive" });
+    const userCount = await Employee.countDocuments();
+    const active = await Employee.countDocuments({ status: "Active" });
+    const inactive = await Employee.countDocuments({ status: "Inactive" });
 
     res.json({ userCount, active, inactive });
   } catch (error) {
@@ -13,8 +13,8 @@ exports.getStatus = async (req, res) => {
   }
 };
 
-//search users
-exports.searchUsers = async (req, res) => {
+//search employees
+exports.searchEmployees = async (req, res) => {
   try {
     const query = req.params.query;
     const page = parseInt(req.query.page) || 1;
@@ -30,15 +30,15 @@ exports.searchUsers = async (req, res) => {
       ],
     };
 
-    const users = await User.find(searchQuery)
+    const employees = await Employee.find(searchQuery)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
 
-    const total = await User.countDocuments(searchQuery);
+    const total = await Employee.countDocuments(searchQuery);
 
     res.json({
-      users,
+      users: employees,
       currentPage: page,
       totalPages: Math.ceil(total / limit),
       totalUsers: total,
@@ -48,23 +48,22 @@ exports.searchUsers = async (req, res) => {
   }
 };
 
-//get all users
-exports.getAllUsers = async (req, res) => {
+//get all employees
+exports.getAllEmployees = async (req, res) => {
   try {
-    const query = req.params.query;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
 
     const skip = (page - 1) * limit;
-    const users = await User.find()
+    const employees = await Employee.find()
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
 
-    const total = await User.countDocuments();
+    const total = await Employee.countDocuments();
 
     res.json({
-      users,
+      users: employees,
       currentPage: page,
       totalPages: Math.ceil(total / limit),
       totalUsers: total,
@@ -72,27 +71,27 @@ exports.getAllUsers = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Error fetching users", error: error.message });
+      .json({ message: "Error fetching employees", error: error.message });
   }
 };
 
-//get single user by ID
-exports.getUserById = async (req, res) => {
+//get single employee by ID
+exports.getEmployeeById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    const employee = await Employee.findById(req.params.id);
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
     }
-    res.json(user);
+    res.json(employee);
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Error fetching user", error: error.message });
+      .json({ message: "Error fetching employee", error: error.message });
   }
 };
 
-//Create User
-exports.createUser = async (req, res) => {
+//Create Employee
+exports.createEmployee = async (req, res) => {
   try {
     const { name, email, phone, status } = req.body;
     if (!name || !email || !phone) {
@@ -101,72 +100,72 @@ exports.createUser = async (req, res) => {
         .json({ message: "Name, Email and Phone are required" });
     }
 
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
+    const existingEmployee = await Employee.findOne({ email });
+    if (existingEmployee) {
       return res.status(400).json({ message: "Email already exists" });
     }
 
-    const user = new User({
+    const employee = new Employee({
       name,
       email,
       phone,
       status: status || "Active",
     });
-    await user.save();
-    res.status(201).json(user);
+    await employee.save();
+    res.status(201).json(employee);
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Error creating user", error: error.message });
+      .json({ message: "Error creating employee", error: error.message });
   }
 };
 
-//Update User
-exports.updateUser = async (req, res) => {
+//Update Employee
+exports.updateEmployee = async (req, res) => {
   try {
     const { name, email, phone, status } = req.body;
 
     if (email) {
-      const userExists = await User.find({
+      const employeeExists = await Employee.find({
         email,
         _id: { $ne: req.params.id },
       });
-      if (userExists.length > 0) {
+      if (employeeExists.length > 0) {
         return res
           .status(400)
-          .json({ message: "Email already in use by another user" });
+          .json({ message: "Email already in use by another employee" });
       }
     }
 
-    const user = await User.findByIdAndUpdate(
+    const employee = await Employee.findByIdAndUpdate(
       req.params.id,
       { name, email, phone, status },
       { new: true, runValidators: true }
     );
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
     }
 
-    res.json(user);
+    res.json(employee);
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Error updating user", error: error.message });
+      .json({ message: "Error updating employee", error: error.message });
   }
 };
 
-//Delete User
-exports.deleteUser = async (req, res) => {
+//Delete Employee
+exports.deleteEmployee = async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
+    const employee = await Employee.findByIdAndDelete(req.params.id);
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
     }
-    res.json({ message: "User deleted successfully", success: true });
+    res.json({ message: "Employee deleted successfully", success: true });
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Error deleting user", error: error.message });
+      .json({ message: "Error deleting employee", error: error.message });
   }
 };

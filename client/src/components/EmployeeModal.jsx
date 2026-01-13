@@ -1,7 +1,7 @@
 import { Check, X } from "lucide-react";
 import React from "react";
 
-const UserModel = ({
+const EmployeeModal = ({
   isOpen,
   onClose,
   formData,
@@ -12,20 +12,21 @@ const UserModel = ({
 }) => {
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-      <div className="bg-gray-900 rounded-lg shadow-2xl max-w-2xl w-full max-h-screen overflow-auto border border-gray-800">
-        <div className="flex justify-between items-center p-6 border-b border-gray-800">
-          <h2 className="text-2xl font-bold text-white">
-            {formData._id ? "Edit User" : "Add New User"}
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-3 sm:p-4 z-50">
+      <div className="bg-gray-900 rounded-lg shadow-2xl max-w-2xl w-full max-h-[95vh] overflow-auto border border-gray-800">
+        <div className="flex justify-between items-center p-4 sm:p-6 border-b border-gray-800">
+          <h2 className="text-xl sm:text-2xl font-bold text-white">
+            {formData._id ? "Edit Employee" : "Add New Employee"}
           </h2>
           <button
-            className="text-gray-400 hover:text-white transition-all"
+            className="text-gray-400 hover:text-white transition-all p-1"
             onClick={onClose}
+            aria-label="Close"
           >
-            <X size={24} />
+            <X size={20} className="sm:w-6 sm:h-6" />
           </button>
         </div>
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-gray-300 font-medium mb-2">
@@ -80,32 +81,34 @@ const UserModel = ({
                   setFormData({ ...formData, status: e.target.value })
                 }
               >
-                {status.map((status) => (
-                  <option value={status}>{status}</option>
+                {status.map((statusOption) => (
+                  <option key={statusOption} value={statusOption}>
+                    {statusOption}
+                  </option>
                 ))}
               </select>
             </div>
           </div>
-          <div className="flex gap-3 mt-6">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4 sm:mt-6">
             <button
-              className="flex-1 px-4 py-2.5 bg-gray-800 border border-gray-700 text-gray-300 rounded-lg hover:bg-gray-700 transition-all"
+              className="flex-1 px-4 py-2.5 bg-gray-800 border border-gray-700 text-gray-300 rounded-lg hover:bg-gray-700 transition-all text-sm sm:text-base"
               onClick={onClose}
             >
               Cancel
             </button>
             <button
-              className="flex-1 flex items-center justify-center px-4 py-2.5 bg-green-500 border border-gray-700 text-gray-900 rounded-lg hover:bg-green-400 transition-all"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-green-500 border border-gray-700 text-gray-900 rounded-lg hover:bg-green-400 transition-all text-sm sm:text-base"
               onClick={onSubmit}
               disabled={loading}
             >
-              <Check size={20} />
+              <Check size={18} className="sm:w-5 sm:h-5" />
               {loading
                 ? formData._id
                   ? "Updating..."
                   : "Adding..."
                 : formData._id
-                ? "Update User"
-                : "Add User"}
+                ? "Update Employee"
+                : "Add Employee"}
             </button>
           </div>
         </div>
@@ -114,4 +117,4 @@ const UserModel = ({
   );
 };
 
-export default UserModel;
+export default EmployeeModal;
